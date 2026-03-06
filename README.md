@@ -65,6 +65,7 @@ Commands flow: User → Agent → Context → Router → Validation → Confirma
 - **Security Policy**: I established the specific confirmation protocol, deciding which agent actions require user approval versus direct execution.
 - **UX & Branding**: I designed the agent's flyout experience, theme integration, and the overall navigation flow of the application.
 - **Logic Implementation**: I implemented the core service layer, including state management via Context and native module interaction for file exports.
+- **Native File Creation**: I developed the native Swift/Kotlin logic for creating and writing files to the device document directory, ensuring no external libraries (like react-native-fs) were used.
 
 **AI Assistance**:
 The AI assisted in:
