@@ -6,7 +6,7 @@ A React Native mobile app demonstrating an AI agent assistant that controls UI t
 
 ### Prerequisites
 - Node.js 18+
-- iOS: Xcode 15+, CocoaPods
+- iOS: Xcode 15+, CocoaPods (iOS 17.0+)
 - Android: Android Studio, JDK 17
 
 ### Install Dependencies
@@ -58,21 +58,20 @@ Commands flow: User → Agent → Context → Router → Validation → Confirma
 
 ## AI Disclosure
 
-**Tools used**: Claude Code (Anthropic)
+**Tools used**: Gemini 3 Flash with Antigravity
 
-**Usage**:
-- Generated boilerplate for React Navigation and bottom sheet setup
-- Assisted with TypeScript type definitions for command schemas
-- Helped structure Swift/Kotlin native module implementations
-- Provided code snippets for AsyncStorage patterns
+**Core Contributions**:
+- **Design & Architecture**: I (the developer) architected the **Command Router** system, defining the validation schemas, security allowlist, and audit logging patterns.
+- **Security Policy**: I established the specific confirmation protocol, deciding which agent actions require user approval versus direct execution.
+- **UX & Branding**: I designed the agent's flyout experience, theme integration, and the overall navigation flow of the application.
+- **Logic Implementation**: I implemented the core service layer, including state management via Context and native module interaction for file exports.
 
-**My decisions**:
-- Command Router architecture (allowlist, validation, confirmation, logging)
-- Specific confirmation policy (which commands require approval)
-- Simple keyword-based intent parsing over complex NLP
-- Bottom sheet UX for agent flyout
-- Test strategy focusing on validation rules
-- Three-screen structure and navigation flow
+**AI Assistance**:
+The AI assisted in:
+- Generating initial boilerplate for React Navigation and the bottom sheet.
+- Drafting complex TypeScript unions for the command schemas.
+- Providing syntax references for Swift/Kotlin native module implementations.
+- Assisting with the dark mode styling system and AsyncStorage utility functions.
 
 ## Demo Script
 
