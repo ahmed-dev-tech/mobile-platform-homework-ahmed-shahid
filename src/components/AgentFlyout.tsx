@@ -303,12 +303,8 @@ const AgentFlyout = () => {
 };
 
 const styles = StyleSheet.create({
-  bottomSheetBackground: {
-    backgroundColor: '#fff',
-  },
-  handleIndicator: {
-    backgroundColor: '#ccc',
-  },
+  bottomSheetBackground: {},
+  handleIndicator: {},
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -319,16 +315,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    backgroundColor: '#fff',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
   },
   closeButton: {
-    color: '#007AFF',
     fontSize: 16,
   },
   confirmationCard: {
@@ -413,34 +405,27 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   agentMessage: {
-    backgroundColor: '#f0f0f0',
     padding: 12,
     borderRadius: 16,
     maxWidth: '80%',
   },
   agentMessageText: {
-    color: '#333',
     fontSize: 15,
   },
   inputContainer: {
     flexDirection: 'row',
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
     gap: 8,
-    backgroundColor: '#fff',
   },
   input: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
     fontSize: 15,
-    color: '#333',
   },
   sendButton: {
-    backgroundColor: '#007AFF',
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,

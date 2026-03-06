@@ -6,11 +6,7 @@ import {Command, CommandExecutionResult} from '../types/commands';
 
 const {FileExportModule} = NativeModules;
 
-// Debug: Check if module is available
-console.log('FileExportModule available:', FileExportModule ? 'YES' : 'NO');
-if (FileExportModule) {
-  console.log('FileExportModule methods:', Object.keys(FileExportModule));
-}
+// FileExportModule is used for native log exporting on iOS
 
 interface AppState {
   flyoutOpen: boolean;
@@ -46,7 +42,6 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) =
   });
 
   const setNavigation = (nav: any) => {
-    console.log('Setting navigation ref:', nav ? 'present' : 'null');
     navigationRef.current = nav;
   };
 

@@ -186,17 +186,14 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
     padding: 20,
     paddingBottom: 10,
   },
   section: {
-    backgroundColor: '#fff',
     padding: 16,
     marginBottom: 16,
   },
@@ -209,12 +206,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#333',
     marginBottom: 16,
   },
   logCount: {
     fontSize: 14,
-    color: '#666',
   },
   preferenceItem: {
     flexDirection: 'row',
@@ -222,17 +217,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
   },
   preferenceLabel: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#333',
     marginBottom: 4,
   },
   preferenceDescription: {
     fontSize: 13,
-    color: '#666',
   },
   logActions: {
     flexDirection: 'row',
@@ -242,14 +234,11 @@ const styles = StyleSheet.create({
   actionButton: {
     flex: 1,
     padding: 12,
-    backgroundColor: '#007AFF',
     borderRadius: 8,
     alignItems: 'center',
   },
   dangerButton: {
-    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#FF3B30',
   },
   actionButtonText: {
     color: '#fff',
@@ -261,12 +250,10 @@ const styles = StyleSheet.create({
   },
   emptyLog: {
     textAlign: 'center',
-    color: '#999',
     fontSize: 16,
     paddingVertical: 20,
   },
   logEntry: {
-    backgroundColor: '#f8f8f8',
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
@@ -289,19 +276,15 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 11,
-    color: '#666',
   },
   commandType: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
     marginBottom: 8,
   },
   payload: {
     fontSize: 12,
-    color: '#666',
     fontFamily: 'Courier',
-    backgroundColor: '#fff',
     padding: 8,
     borderRadius: 4,
   },

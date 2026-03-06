@@ -24,13 +24,11 @@ function AppContent() {
 
   useEffect(() => {
     if (navigationRef.isReady()) {
-      console.log('Navigation is ready, setting navigation ref');
       setNavigation(navigationRef);
     }
   }, [navigationRef]);
 
   const handleOpenAgent = async () => {
-    console.log('Open Agent');
     await executeCommand({type: 'openFlyout', payload: {}});
   };
 
@@ -41,7 +39,6 @@ function AppContent() {
         ref={navigationRef}
         theme={darkMode ? DarkTheme : DefaultTheme}
         onReady={() => {
-          console.log('Navigation container ready');
           setNavigation(navigationRef);
         }}>
         <Tab.Navigator

@@ -167,27 +167,22 @@ const ExploreScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
     padding: 20,
     paddingBottom: 10,
   },
   controls: {
-    backgroundColor: '#fff',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
   },
   filterSection: {
     marginBottom: 12,
   },
   label: {
     fontSize: 14,
-    color: '#666',
     marginBottom: 8,
   },
   filterButtons: {
@@ -199,14 +194,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
   },
   activeFilter: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#007AFF', // Kept as it is a specific active state color, though usually primary
   },
   filterText: {
     fontSize: 14,
-    color: '#333',
   },
   activeFilterText: {
     color: '#fff',
@@ -221,16 +214,13 @@ const styles = StyleSheet.create({
   },
   sortButton: {
     padding: 12,
-    backgroundColor: '#f0f0f0',
     borderRadius: 8,
   },
   sortText: {
     fontSize: 14,
-    color: '#333',
     fontWeight: '500',
   },
   item: {
-    backgroundColor: '#fff',
     padding: 16,
     marginHorizontal: 16,
     marginTop: 12,
@@ -244,12 +234,10 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
     marginBottom: 4,
   },
   itemCategory: {
     fontSize: 14,
-    color: '#666',
     textTransform: 'capitalize',
   },
   emptyText: {
