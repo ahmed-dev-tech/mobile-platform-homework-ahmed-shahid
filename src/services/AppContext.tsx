@@ -87,7 +87,12 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) =
 
       // Check if requires confirmation
       if (commandRouter.requiresConfirmation(command)) {
-        setState(prev => ({...prev, pendingCommand: command}));
+        Alert.alert(
+          'Action Proposed',
+          `The agent assistant would like to: ${command.type}. Please review and confirm in the agent window.`,
+          [{text: 'Review', onPress: () => setState(prev => ({...prev, flyoutOpen: true}))}]
+        );
+        setState(prev => ({...prev, pendingCommand: command, flyoutOpen: true}));
         await commandRouter.logCommand(command, 'pending', 'Awaiting user confirmation');
         return {success: true};
       }
