@@ -1,15 +1,16 @@
-import React, {useRef, useEffect, useState, useCallback} from 'react';
+import React, {useRef, useEffect, useState, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Modal,
+  ScrollView,
 } from 'react-native';
+import BottomSheet, {
+  BottomSheetFlatList,
+  BottomSheetTextInput,
+} from '@gorhom/bottom-sheet';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useApp} from '../services/AppContext';
 import {Command} from '../types/commands';
 
@@ -22,6 +23,7 @@ interface Message {
 
 const AgentFlyout = () => {
   const {state, executeCommand, confirmCommand} = useApp();
+  const insets = useSafeAreaInsets();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -31,9 +33,22 @@ const AgentFlyout = () => {
   ]);
   const [inputText, setInputText] = useState('');
 
-  const handleClose = async () => {
+  // Bottom sheet ref and snap points
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['75%'], []);
+
+  // Control bottom sheet based on flyoutOpen state
+  useEffect(() => {
+    if (state.flyoutOpen) {
+      bottomSheetRef.current?.expand();
+    } else {
+      bottomSheetRef.current?.close();
+    }
+  }, [state.flyoutOpen]);
+
+  const handleClose = useCallback(async () => {
     await executeCommand({type: 'closeFlyout', payload: {}});
-  };
+  }, [executeCommand]);
 
   const parseUserIntent = (text: string): {response: string; command?: Command} => {
     const lower = text.toLowerCase();
@@ -202,17 +217,18 @@ const AgentFlyout = () => {
   };
 
   return (
-    <Modal
-      visible={state.flyoutOpen}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={handleClose}>
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
-            keyboardVerticalOffset={100}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={-1}
+      snapPoints={snapPoints}
+      enablePanDownToClose={true}
+      onClose={handleClose}
+      backgroundStyle={styles.bottomSheetBackground}
+      handleIndicatorStyle={styles.handleIndicator}
+      keyboardBehavior="interactive"
+      keyboardBlurBehavior="restore"
+      android_keyboardInputMode="adjustResize">
+      <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Agent Assistant</Text>
           <TouchableOpacity onPress={handleClose}>
@@ -222,13 +238,17 @@ const AgentFlyout = () => {
 
         {state.pendingCommand && (
           <View style={styles.confirmationCard}>
-            <Text style={styles.confirmationTitle}>Proposed Action</Text>
-            <Text style={styles.confirmationText}>
-              {state.pendingCommand.type}
-            </Text>
-            <Text style={styles.confirmationPayload}>
-              {JSON.stringify(state.pendingCommand.payload)}
-            </Text>
+            <ScrollView
+              style={styles.confirmationScroll}
+              showsVerticalScrollIndicator={true}>
+              <Text style={styles.confirmationTitle}>Proposed Action</Text>
+              <Text style={styles.confirmationText}>
+                {state.pendingCommand.type}
+              </Text>
+              <Text style={styles.confirmationPayload}>
+                {JSON.stringify(state.pendingCommand.payload, null, 2)}
+              </Text>
+            </ScrollView>
             <View style={styles.confirmationButtons}>
               <TouchableOpacity
                 style={[styles.confirmButton, styles.cancelButton]}
@@ -244,16 +264,20 @@ const AgentFlyout = () => {
           </View>
         )}
 
-        <FlatList
+        <BottomSheetFlatList
           data={messages}
           renderItem={renderMessage}
-          keyExtractor={item => item.id}
+          keyExtractor={(item: Message) => item.id}
           style={styles.messageList}
           contentContainerStyle={styles.messageListContent}
         />
 
-        <View style={styles.inputContainer}>
-          <TextInput
+        <View
+          style={[
+            styles.inputContainer,
+            {paddingBottom: Math.max(insets.bottom, 16)},
+          ]}>
+          <BottomSheetTextInput
             style={styles.input}
             value={inputText}
             onChangeText={setInputText}
@@ -266,27 +290,21 @@ const AgentFlyout = () => {
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
-        </View>
       </View>
-    </Modal>
+    </BottomSheet>
   );
 };
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    height: '75%',
+  bottomSheetBackground: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  },
+  handleIndicator: {
+    backgroundColor: '#ccc',
   },
   container: {
     flex: 1,
+    flexDirection: 'column',
   },
   header: {
     flexDirection: 'row',
@@ -295,6 +313,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
+    backgroundColor: '#fff',
   },
   headerTitle: {
     fontSize: 18,
@@ -312,6 +331,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#FFE69C',
+    maxHeight: '40%', // Prevent card from taking over the whole sheet
+  },
+  confirmationScroll: {
+    maxHeight: 200, // Limit height of scrollable area
+    marginBottom: 12,
   },
   confirmationTitle: {
     fontSize: 16,
@@ -397,6 +421,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
     gap: 8,
+    backgroundColor: '#fff',
   },
   input: {
     flex: 1,

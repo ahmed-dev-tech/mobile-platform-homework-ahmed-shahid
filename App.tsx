@@ -3,7 +3,9 @@ import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StyleSheet, TouchableOpacity, Text, View, Alert} from 'react-native';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 
 import {AppProvider, useApp} from './src/services/AppContext';
 import HomeScreen from './src/screens/HomeScreen';
@@ -53,9 +55,33 @@ function AppContent() {
             tabBarActiveTintColor: '#007AFF',
             tabBarInactiveTintColor: '#999',
           }}>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Explore" component={ExploreScreen} />
-          <Tab.Screen name="Profile" component={ProfileScreen} />
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({color, size}) => (
+                <MaterialIcons name="home" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Explore"
+            component={ExploreScreen}
+            options={{
+              tabBarIcon: ({color, size}) => (
+                <MaterialIcons name="explore" color={color} size={size} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              tabBarIcon: ({color, size}) => (
+                <MaterialIcons name="person" color={color} size={size} />
+              ),
+            }}
+          />
         </Tab.Navigator>
       </NavigationContainer>
 
@@ -76,9 +102,11 @@ function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
-        <AppProvider>
-          <AppContent />
-        </AppProvider>
+        <BottomSheetModalProvider>
+          <AppProvider>
+            <AppContent />
+          </AppProvider>
+        </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
