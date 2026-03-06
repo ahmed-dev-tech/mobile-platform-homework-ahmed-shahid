@@ -1,10 +1,11 @@
 import Foundation
+import React
 
 @objc(FileExportModule)
 class FileExportModule: NSObject {
 
   @objc
-  func exportLog(_ logData: String, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) {
+  func exportLog(_ logData: String, resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) -> Void {
     do {
       // Get the documents directory path
       let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

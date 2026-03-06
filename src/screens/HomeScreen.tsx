@@ -6,6 +6,7 @@ const HomeScreen = () => {
   const {executeCommand} = useApp();
 
   const handleOpenAgent = async () => {
+    console.log('Open Agent');
     await executeCommand({type: 'openFlyout', payload: {}});
   };
 

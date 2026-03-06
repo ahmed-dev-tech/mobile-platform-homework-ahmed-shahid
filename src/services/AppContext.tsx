@@ -1,11 +1,16 @@
 import React, {createContext, useContext, useState, useCallback, useEffect} from 'react';
-import {Alert} from 'react-native';
+import {Alert, NativeModules, Platform} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CommandRouter from './CommandRouter';
 import {Command, CommandExecutionResult} from '../types/commands';
-import {NativeModules} from 'react-native';
 
 const {FileExportModule} = NativeModules;
+
+// Debug: Check if module is available
+console.log('FileExportModule available:', FileExportModule ? 'YES' : 'NO');
+if (FileExportModule) {
+  console.log('FileExportModule methods:', Object.keys(FileExportModule));
+}
 
 interface AppState {
   flyoutOpen: boolean;
@@ -28,7 +33,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const PREFERENCES_KEY = '@app_preferences';
 
 export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
-  const [navigation, setNavigation] = useState<any>(null);
+  const navigationRef = React.useRef<any>(null);
   const [state, setState] = useState<AppState>({
     flyoutOpen: false,
     exploreFilter: '',
@@ -39,6 +44,11 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) =
     },
     pendingCommand: null,
   });
+
+  const setNavigation = (nav: any) => {
+    console.log('Setting navigation ref:', nav ? 'present' : 'null');
+    navigationRef.current = nav;
+  };
 
   const commandRouter = CommandRouter.getInstance();
 
@@ -94,12 +104,13 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) =
     try {
       switch (command.type) {
         case 'navigate':
-          if (navigation) {
-            navigation.navigate(command.payload.screen);
+          if (navigationRef.current) {
+            navigationRef.current.navigate(command.payload.screen);
             await commandRouter.logCommand(command, 'executed');
             return {success: true};
           }
-          throw new Error('Navigation not available');
+          console.error('Navigation not available - navigation object is null');
+          throw new Error('Navigation not available. Please try again.');
 
         case 'openFlyout':
           setState(prev => ({...prev, flyoutOpen: true}));
@@ -137,8 +148,13 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) =
 
         case 'exportAuditLog':
           if (FileExportModule) {
-            await FileExportModule.exportLog(command.payload.log);
+            const filePath = await FileExportModule.exportLog(command.payload.log);
             await commandRouter.logCommand(command, 'executed');
+            Alert.alert(
+              'Export Successful',
+              `Activity log has been exported successfully to:\n${filePath}`,
+              [{text: 'OK'}]
+            );
             return {success: true};
           }
           throw new Error('File export module not available');
@@ -175,7 +191,7 @@ export const AppProvider: React.FC<{children: React.ReactNode}> = ({children}) =
 
   return (
     <AppContext.Provider
-      value={{state, executeCommand, confirmCommand, navigation, setNavigation}}>
+      value={{state, executeCommand, confirmCommand, navigation: navigationRef.current, setNavigation}}>
       {children}
     </AppContext.Provider>
   );

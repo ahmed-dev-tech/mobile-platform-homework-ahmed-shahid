@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text, View, Alert} from 'react-native';
 
 import {AppProvider, useApp} from './src/services/AppContext';
 import HomeScreen from './src/screens/HomeScreen';
@@ -15,18 +15,27 @@ const Tab = createBottomTabNavigator();
 
 function AppContent() {
   const {setNavigation, executeCommand} = useApp();
+  const navigationRef = useNavigationContainerRef();
+
+  useEffect(() => {
+    if (navigationRef.isReady()) {
+      console.log('Navigation is ready, setting navigation ref');
+      setNavigation(navigationRef);
+    }
+  }, [navigationRef]);
 
   const handleOpenAgent = async () => {
+    console.log('Open Agent');
     await executeCommand({type: 'openFlyout', payload: {}});
   };
 
   return (
     <>
       <NavigationContainer
-        ref={nav => {
-          if (nav) {
-            setNavigation(nav);
-          }
+        ref={navigationRef}
+        onReady={() => {
+          console.log('Navigation container ready');
+          setNavigation(navigationRef);
         }}>
         <Tab.Navigator
           screenOptions={{

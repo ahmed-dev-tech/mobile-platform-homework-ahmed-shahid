@@ -8,8 +8,8 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from 'react-native';
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {useApp} from '../services/AppContext';
 import {Command} from '../types/commands';
 
@@ -22,7 +22,6 @@ interface Message {
 
 const AgentFlyout = () => {
   const {state, executeCommand, confirmCommand} = useApp();
-  const bottomSheetRef = useRef<BottomSheet>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -32,30 +31,9 @@ const AgentFlyout = () => {
   ]);
   const [inputText, setInputText] = useState('');
 
-  useEffect(() => {
-    if (state.flyoutOpen) {
-      bottomSheetRef.current?.expand();
-    } else {
-      bottomSheetRef.current?.close();
-    }
-  }, [state.flyoutOpen]);
-
   const handleClose = async () => {
     await executeCommand({type: 'closeFlyout', payload: {}});
   };
-
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        opacity={0.5}
-        pressBehavior="close"
-      />
-    ),
-    [],
-  );
 
   const parseUserIntent = (text: string): {response: string; command?: Command} => {
     const lower = text.toLowerCase();
@@ -224,17 +202,17 @@ const AgentFlyout = () => {
   };
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
-      snapPoints={['75%']}
-      enablePanDownToClose
-      onClose={handleClose}
-      backdropComponent={renderBackdrop}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-        keyboardVerticalOffset={100}>
+    <Modal
+      visible={state.flyoutOpen}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={handleClose}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}
+            keyboardVerticalOffset={100}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Agent Assistant</Text>
           <TouchableOpacity onPress={handleClose}>
@@ -289,11 +267,24 @@ const AgentFlyout = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </BottomSheet>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    height: '75%',
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
   container: {
     flex: 1,
   },
