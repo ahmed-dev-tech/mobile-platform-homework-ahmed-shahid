@@ -1,9 +1,12 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useApp} from '../services/AppContext';
+import Colors from '../constants/Colors';
 
 const HomeScreen = () => {
-  const {executeCommand} = useApp();
+  const {state, executeCommand} = useApp();
+  const darkMode = !!state.preferences.darkMode;
+  const colors = darkMode ? Colors.dark : Colors.light;
 
   const handleOpenAgent = async () => {
     console.log('Open Agent');
@@ -11,23 +14,23 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Agent Control App</Text>
-      <Text style={styles.subtitle}>
+    <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <Text style={[styles.title, {color: colors.text}]}>Agent Control App</Text>
+      <Text style={[styles.subtitle, {color: colors.subtext}]}>
         Welcome to the agent-controlled mobile experience
       </Text>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>What is this app?</Text>
-        <Text style={styles.cardText}>
+      <View style={[styles.card, {backgroundColor: colors.card}]}>
+        <Text style={[styles.cardTitle, {color: colors.text}]}>What is this app?</Text>
+        <Text style={[styles.cardText, {color: colors.subtext}]}>
           This app demonstrates an AI agent that can navigate and control the UI
           through validated, auditable commands.
         </Text>
       </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>How to use</Text>
-        <Text style={styles.cardText}>
+      <View style={[styles.card, {backgroundColor: colors.card}]}>
+        <Text style={[styles.cardTitle, {color: colors.text}]}>How to use</Text>
+        <Text style={[styles.cardText, {color: colors.subtext}]}>
           1. Tap the agent button at the bottom{'\n'}
           2. Ask the agent what it can do{'\n'}
           3. Let the agent help you navigate{'\n'}
@@ -35,7 +38,9 @@ const HomeScreen = () => {
         </Text>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleOpenAgent}>
+      <TouchableOpacity
+        style={[styles.button, {backgroundColor: colors.primary}]}
+        onPress={handleOpenAgent}>
         <Text style={styles.buttonText}>Open Agent</Text>
       </TouchableOpacity>
     </View>

@@ -11,11 +11,14 @@ import {
 import {useApp} from '../services/AppContext';
 import CommandRouter from '../services/CommandRouter';
 import {CommandLogEntry} from '../types/commands';
+import Colors from '../constants/Colors';
 
 const ProfileScreen = () => {
   const {state, executeCommand} = useApp();
   const [commandLog, setCommandLog] = useState<CommandLogEntry[]>([]);
   const commandRouter = CommandRouter.getInstance();
+  const darkMode = !!state.preferences.darkMode;
+  const colors = darkMode ? Colors.dark : Colors.light;
 
   useEffect(() => {
     // Load initial log
@@ -26,7 +29,9 @@ const ProfileScreen = () => {
       setCommandLog(commandRouter.getLog());
     });
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const togglePreference = async (key: string, value: boolean) => {
@@ -81,53 +86,55 @@ const ProfileScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
+    <ScrollView style={[styles.container, {backgroundColor: colors.background}]}>
+      <Text style={[styles.title, {color: colors.text}]}>Profile</Text>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Preferences</Text>
+      <View style={[styles.section, {backgroundColor: colors.surface}]}>
+        <Text style={[styles.sectionTitle, {color: colors.text}]}>Preferences</Text>
 
-        <View style={styles.preferenceItem}>
+        <View style={[styles.preferenceItem, {borderBottomColor: colors.border}]}>
           <View>
-            <Text style={styles.preferenceLabel}>Dark Mode</Text>
-            <Text style={styles.preferenceDescription}>
+            <Text style={[styles.preferenceLabel, {color: colors.text}]}>Dark Mode</Text>
+            <Text style={[styles.preferenceDescription, {color: colors.subtext}]}>
               Enable dark theme for the app
             </Text>
           </View>
           <Switch
             value={state.preferences.darkMode as boolean}
             onValueChange={value => togglePreference('darkMode', value)}
+            trackColor={{false: colors.border, true: colors.primary}}
           />
         </View>
 
-        <View style={styles.preferenceItem}>
+        <View style={[styles.preferenceItem, {borderBottomColor: colors.border}]}>
           <View>
-            <Text style={styles.preferenceLabel}>Notifications</Text>
-            <Text style={styles.preferenceDescription}>
+            <Text style={[styles.preferenceLabel, {color: colors.text}]}>Notifications</Text>
+            <Text style={[styles.preferenceDescription, {color: colors.subtext}]}>
               Receive agent activity notifications
             </Text>
           </View>
           <Switch
             value={state.preferences.notifications as boolean}
             onValueChange={value => togglePreference('notifications', value)}
+            trackColor={{false: colors.border, true: colors.primary}}
           />
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, {backgroundColor: colors.surface}]}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Agent Activity Log</Text>
-          <Text style={styles.logCount}>{commandLog.length} entries</Text>
+          <Text style={[styles.sectionTitle, {color: colors.text}]}>Agent Activity Log</Text>
+          <Text style={[styles.logCount, {color: colors.subtext}]}>{commandLog.length} entries</Text>
         </View>
 
         <View style={styles.logActions}>
           <TouchableOpacity
-            style={styles.actionButton}
+            style={[styles.actionButton, {backgroundColor: colors.primary}]}
             onPress={handleExportLog}>
             <Text style={styles.actionButtonText}>Export Log</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.actionButton, styles.dangerButton]}
+            style={[styles.actionButton, styles.dangerButton, {borderColor: '#FF3B30'}]}
             onPress={handleClearLog}>
             <Text style={[styles.actionButtonText, styles.dangerButtonText]}>
               Clear Log
@@ -136,10 +143,12 @@ const ProfileScreen = () => {
         </View>
 
         {commandLog.length === 0 ? (
-          <Text style={styles.emptyLog}>No activity yet</Text>
+          <Text style={[styles.emptyLog, {color: colors.subtext}]}>No activity yet</Text>
         ) : (
           commandLog.map(entry => (
-            <View key={entry.id} style={styles.logEntry}>
+            <View
+              key={entry.id}
+              style={[styles.logEntry, {backgroundColor: colors.background}]}>
               <View style={styles.logHeader}>
                 <View
                   style={[
@@ -150,14 +159,16 @@ const ProfileScreen = () => {
                     {entry.status.toUpperCase()}
                   </Text>
                 </View>
-                <Text style={styles.timestamp}>
+                <Text style={[styles.timestamp, {color: colors.subtext}]}>
                   {formatTimestamp(entry.timestamp)}
                 </Text>
               </View>
 
-              <Text style={styles.commandType}>{entry.command.type}</Text>
+              <Text style={[styles.commandType, {color: colors.text}]}>
+                {entry.command.type}
+              </Text>
 
-              <Text style={styles.payload}>
+              <Text style={[styles.payload, {backgroundColor: colors.surface, color: colors.subtext}]}>
                 {JSON.stringify(entry.command.payload, null, 2)}
               </Text>
 

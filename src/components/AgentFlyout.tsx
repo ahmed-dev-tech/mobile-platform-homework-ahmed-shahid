@@ -13,6 +13,7 @@ import BottomSheet, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useApp} from '../services/AppContext';
 import {Command} from '../types/commands';
+import Colors from '../constants/Colors';
 
 interface Message {
   id: string;
@@ -24,6 +25,8 @@ interface Message {
 const AgentFlyout = () => {
   const {state, executeCommand, confirmCommand} = useApp();
   const insets = useSafeAreaInsets();
+  const darkMode = !!state.preferences.darkMode;
+  const colors = darkMode ? Colors.dark : Colors.light;
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -209,8 +212,8 @@ const AgentFlyout = () => {
 
     return (
       <View style={styles.agentMessageContainer}>
-        <View style={styles.agentMessage}>
-          <Text style={styles.agentMessageText}>{item.text}</Text>
+        <View style={[styles.agentMessage, {backgroundColor: darkMode ? '#333' : '#f0f0f0'}]}>
+          <Text style={[styles.agentMessageText, {color: colors.text}]}>{item.text}</Text>
         </View>
       </View>
     );
@@ -223,16 +226,16 @@ const AgentFlyout = () => {
       snapPoints={snapPoints}
       enablePanDownToClose={true}
       onClose={handleClose}
-      backgroundStyle={styles.bottomSheetBackground}
-      handleIndicatorStyle={styles.handleIndicator}
+      backgroundStyle={[styles.bottomSheetBackground, {backgroundColor: colors.card}]}
+      handleIndicatorStyle={[styles.handleIndicator, {backgroundColor: colors.border}]}
       keyboardBehavior="interactive"
       keyboardBlurBehavior="restore"
       android_keyboardInputMode="adjustResize">
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Agent Assistant</Text>
+      <View style={[styles.container, {backgroundColor: colors.card}]}>
+        <View style={[styles.header, {backgroundColor: colors.card, borderBottomColor: colors.border}]}>
+          <Text style={[styles.headerTitle, {color: colors.text}]}>Agent Assistant</Text>
           <TouchableOpacity onPress={handleClose}>
-            <Text style={styles.closeButton}>Close</Text>
+            <Text style={[styles.closeButton, {color: colors.primary}]}>Close</Text>
           </TouchableOpacity>
         </View>
 
@@ -275,18 +278,22 @@ const AgentFlyout = () => {
         <View
           style={[
             styles.inputContainer,
-            {paddingBottom: Math.max(insets.bottom, 16)},
+            {
+              paddingBottom: Math.max(insets.bottom, 16),
+              backgroundColor: colors.card,
+              borderTopColor: colors.border,
+            },
           ]}>
           <BottomSheetTextInput
-            style={styles.input}
+            style={[styles.input, {backgroundColor: colors.background, color: colors.text}]}
             value={inputText}
             onChangeText={setInputText}
             placeholder="Ask me anything..."
-            placeholderTextColor="#999"
+            placeholderTextColor={darkMode ? '#888' : '#999'}
             onSubmitEditing={handleSend}
             returnKeyType="send"
           />
-          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+          <TouchableOpacity style={[styles.sendButton, {backgroundColor: colors.primary}]} onPress={handleSend}>
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
         </View>

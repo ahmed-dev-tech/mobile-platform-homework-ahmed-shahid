@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {useApp} from '../services/AppContext';
+import Colors from '../constants/Colors';
 
 const SAMPLE_ITEMS = [
   {id: '1', name: 'Alpha Item', category: 'technology'},
@@ -14,6 +15,8 @@ const SAMPLE_ITEMS = [
 const ExploreScreen = () => {
   const {state, executeCommand} = useApp();
   const {exploreFilter, exploreSort} = state;
+  const darkMode = !!state.preferences.darkMode;
+  const colors = darkMode ? Colors.dark : Colors.light;
 
   const filteredItems = React.useMemo(() => {
     let items = [...SAMPLE_ITEMS];
@@ -60,22 +63,30 @@ const ExploreScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Explore</Text>
+    <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <Text style={[styles.title, {color: colors.text}]}>Explore</Text>
 
-      <View style={styles.controls}>
+      <View
+        style={[
+          styles.controls,
+          {backgroundColor: colors.surface, borderBottomColor: colors.border},
+        ]}>
         <View style={styles.filterSection}>
-          <Text style={styles.label}>Filter by category:</Text>
+          <Text style={[styles.label, {color: colors.subtext}]}>Filter by category:</Text>
           <View style={styles.filterButtons}>
             <TouchableOpacity
               style={[
                 styles.filterButton,
-                exploreFilter === 'technology' && styles.activeFilter,
+                {backgroundColor: colors.border},
+                exploreFilter === 'technology' && {
+                  backgroundColor: colors.primary,
+                },
               ]}
               onPress={() => applyFilter('technology')}>
               <Text
                 style={[
                   styles.filterText,
+                  {color: colors.text},
                   exploreFilter === 'technology' && styles.activeFilterText,
                 ]}>
                 Technology
@@ -84,12 +95,14 @@ const ExploreScreen = () => {
             <TouchableOpacity
               style={[
                 styles.filterButton,
-                exploreFilter === 'lifestyle' && styles.activeFilter,
+                {backgroundColor: colors.border},
+                exploreFilter === 'lifestyle' && {backgroundColor: colors.primary},
               ]}
               onPress={() => applyFilter('lifestyle')}>
               <Text
                 style={[
                   styles.filterText,
+                  {color: colors.text},
                   exploreFilter === 'lifestyle' && styles.activeFilterText,
                 ]}>
                 Lifestyle
@@ -98,12 +111,16 @@ const ExploreScreen = () => {
             <TouchableOpacity
               style={[
                 styles.filterButton,
-                exploreFilter === 'productivity' && styles.activeFilter,
+                {backgroundColor: colors.border},
+                exploreFilter === 'productivity' && {
+                  backgroundColor: colors.primary,
+                },
               ]}
               onPress={() => applyFilter('productivity')}>
               <Text
                 style={[
                   styles.filterText,
+                  {color: colors.text},
                   exploreFilter === 'productivity' && styles.activeFilterText,
                 ]}>
                 Productivity
@@ -119,8 +136,10 @@ const ExploreScreen = () => {
           )}
         </View>
 
-        <TouchableOpacity style={styles.sortButton} onPress={toggleSort}>
-          <Text style={styles.sortText}>
+        <TouchableOpacity
+          style={[styles.sortButton, {backgroundColor: colors.border}]}
+          onPress={toggleSort}>
+          <Text style={[styles.sortText, {color: colors.text}]}>
             Sort: {exploreSort === 'asc' ? 'A → Z' : 'Z → A'}
           </Text>
         </TouchableOpacity>
@@ -130,9 +149,9 @@ const ExploreScreen = () => {
         data={filteredItems}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
-          <View style={styles.item}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemCategory}>{item.category}</Text>
+          <View style={[styles.item, {backgroundColor: colors.card}]}>
+            <Text style={[styles.itemName, {color: colors.text}]}>{item.name}</Text>
+            <Text style={[styles.itemCategory, {color: colors.subtext}]}>{item.category}</Text>
           </View>
         )}
         ListEmptyComponent={

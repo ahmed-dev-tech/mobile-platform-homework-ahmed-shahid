@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
-import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
+import {NavigationContainer, useNavigationContainerRef, DefaultTheme, DarkTheme} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text, View, StatusBar} from 'react-native';
+import Colors from './src/constants/Colors';
 
 import {AppProvider, useApp} from './src/services/AppContext';
 import HomeScreen from './src/screens/HomeScreen';
@@ -16,8 +17,10 @@ import AgentFlyout from './src/components/AgentFlyout';
 const Tab = createBottomTabNavigator();
 
 function AppContent() {
-  const {setNavigation, executeCommand} = useApp();
+  const {state, setNavigation, executeCommand} = useApp();
   const navigationRef = useNavigationContainerRef();
+  const darkMode = !!state.preferences.darkMode;
+  const colors = darkMode ? Colors.dark : Colors.light;
 
   useEffect(() => {
     if (navigationRef.isReady()) {
@@ -33,8 +36,10 @@ function AppContent() {
 
   return (
     <>
+      <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
       <NavigationContainer
         ref={navigationRef}
+        theme={darkMode ? DarkTheme : DefaultTheme}
         onReady={() => {
           console.log('Navigation container ready');
           setNavigation(navigationRef);
@@ -42,18 +47,19 @@ function AppContent() {
         <Tab.Navigator
           screenOptions={{
             headerStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: colors.surface,
             },
             headerTitleStyle: {
               fontWeight: '600',
+              color: colors.text,
             },
             tabBarStyle: {
-              backgroundColor: '#fff',
+              backgroundColor: colors.surface,
               borderTopWidth: 1,
-              borderTopColor: '#e0e0e0',
+              borderTopColor: colors.border,
             },
-            tabBarActiveTintColor: '#007AFF',
-            tabBarInactiveTintColor: '#999',
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.subtext,
           }}>
           <Tab.Screen
             name="Home"
@@ -87,7 +93,7 @@ function AppContent() {
 
       <View style={styles.floatingButtonContainer}>
         <TouchableOpacity
-          style={styles.floatingButton}
+          style={[styles.floatingButton, {backgroundColor: colors.primary}]}
           onPress={handleOpenAgent}>
           <Text style={styles.floatingButtonText}>Agent</Text>
         </TouchableOpacity>
