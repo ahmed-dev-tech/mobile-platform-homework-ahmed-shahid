@@ -15,6 +15,7 @@ npm install
 ```
 
 ### iOS
+Standard way:
 ```bash
 cd ios
 bundle install
@@ -22,6 +23,9 @@ bundle exec pod install
 cd ..
 npx react-native run-ios
 ```
+
+**Alternative way (Xcode):**
+After running `pod install`, navigate to the `ios` folder and open `AgentControlApp.xcworkspace`. Select your target simulator and click the **Build** (Play) button. The app will build and open in the simulator.
 
 ### Android
 ```bash
