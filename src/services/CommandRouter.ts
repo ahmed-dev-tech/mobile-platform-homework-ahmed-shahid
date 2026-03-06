@@ -23,6 +23,8 @@ const ALLOWED_COMMANDS: CommandType[] = [
 // Commands that require user confirmation
 const REQUIRES_CONFIRMATION: CommandType[] = [
   'applyExploreFilter',
+  'setPreference',
+  'exportAuditLog',
 ];
 
 class CommandRouter {
