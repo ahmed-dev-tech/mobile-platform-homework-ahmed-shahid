@@ -28,6 +28,16 @@ npx react-native run-ios
 After running `pod install`, navigate to the `ios` folder and open `AgentControlApp.xcworkspace`. Select your target simulator and click the **Build** (Play) button. The app will build and open in the simulator.
 
 ### Android
+**Standard way (Emulator):**
+```bash
+npx react-native run-android
+```
+
+**Running on Physical Device:**
+1. Enable **Developer Options** and **USB Debugging** on your phone (Settings > About Phone > Tap 'Build Number' 7 times).
+2. Connect your phone via USB.
+3. Verify connection by running `adb devices`.
+4. Run the app:
 ```bash
 npx react-native run-android
 ```
