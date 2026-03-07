@@ -126,6 +126,6 @@ With 1-2 more days, I would:
 - [x] agent/CONTEXT.md included
 - [x] artifacts/decisions.md included (≤ 400 words)
 - [x] artifacts/architecture.md included
-- [ ] artifacts/demo-ios.mp4 and artifacts/demo-android.mp4 included
+- [x] artifacts/demo-ios.mp4 and artifacts/demo-android.mp4 included
 - [x] One meaningful test included and described
 - [x] AI disclosure included (tools used + how + what was yours)
